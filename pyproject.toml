@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "supercharging-experimentation-pipelines"
+version = "0.0.1"
+description = "Workshop demo on creating an efficient deep learning experimentation pipeline"
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7,<3.9"
+torch = "^1.10.0"
+pytorch-lightning = "^1.5.0"
+torchvision = "^0.11.1"
+torchmetrics = "^0.6.0"
+dvc = {extras = ["s3"], version = "^2.8.3"}
+jupyterlab = "^3.2.2"
+jsonargparse = {extras = ["signatures"], version = "^3.19.4"}
+
+[tool.poetry.dev-dependencies]
+black = "^21.10b0"
+isort = "^5.10.0"
+pre-commit = "^2.15.0"
+mypy = "^0.910"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
