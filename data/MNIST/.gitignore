@@ -1,0 +1,6 @@
+/train_images.pt
+/train_labels.pt
+/val_images.pt
+/val_labels.pt
+/test_images.pt
+/test_labels.pt
