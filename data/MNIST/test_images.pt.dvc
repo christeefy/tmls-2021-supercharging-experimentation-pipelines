@@ -1,0 +1,4 @@
+outs:
+- md5: f69dee0828bab7df47817ac1f91afc61
+  size: 31360747
+  path: test_images.pt

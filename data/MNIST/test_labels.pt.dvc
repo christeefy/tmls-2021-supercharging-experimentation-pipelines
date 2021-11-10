@@ -1,0 +1,4 @@
+outs:
+- md5: 9a9e2071caa05a50a45daaa2ed64767a
+  size: 80747
+  path: test_labels.pt

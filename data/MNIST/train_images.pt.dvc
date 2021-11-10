@@ -1,0 +1,4 @@
+outs:
+- md5: b14319da2570ef0b2e28351418e6830d
+  size: 156800747
+  path: train_images.pt
