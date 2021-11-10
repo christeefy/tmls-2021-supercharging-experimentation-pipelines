@@ -1,4 +1,5 @@
 from multiprocessing import cpu_count
+from typing import Tuple
 
 import pytorch_lightning as pl
 import torch
@@ -11,12 +12,15 @@ class MNISTDataModule(pl.LightningDataModule):
     def __init__(
         self,
         batch_size: int,
+        train_data: Tuple[str, str],
+        val_data: Tuple[str, str],
+        test_data: Tuple[str, str],
     ):
         self.batch_size = batch_size
         self.num_workers = cpu_count() - 1
-        self.train_dataset = MNISTDataset("train")
-        self.val_dataset = MNISTDataset("val")
-        self.test_dataset = MNISTDataset("test")
+        self.train_dataset = MNISTDataset(*train_data)
+        self.val_dataset = MNISTDataset(*val_data)
+        self.test_dataset = MNISTDataset(*test_data)
 
     def train_dataloader(self):
         return DataLoader(
@@ -38,7 +42,7 @@ class MNISTDataModule(pl.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(
-            self.val_dataset,
+            self.test_dataset,
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
