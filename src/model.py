@@ -45,15 +45,22 @@ class Model(pl.LightningModule):
         self.log_dict({f"test_acc_class_{i}": v.item() for i, v in enumerate(acc)})
         return loss
 
+    def predict_step(self, batch, batch_idx):
+        X = batch
+        X = self.eval_transforms(X)
+        predictions = self.model(X).softmax(dim=-1)
+        return predictions
+
     def _forward_loss_metrics(self, batch, train_mode: bool):
         images, labels = batch
         transformed_images = (
             self.transforms(images) if train_mode else self.eval_transforms(images)
         )
-        predictions = self.model(transformed_images)
-        loss = self.criterion(predictions, labels)
-        accuracy = self.metrics(predictions, labels)
+        logits = self.model(transformed_images)
+        loss = self.criterion(logits, labels)
+        accuracy = self.metrics(logits.softmax(dim=-1), labels)
         accuracy = torch.nan_to_num(accuracy, nan=0.5)
+
         return loss, accuracy
 
     @staticmethod
