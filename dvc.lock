@@ -9,7 +9,7 @@ stages:
       md5: b14319da2570ef0b2e28351418e6830d
       size: 156800747
     - path: data/MNIST/train_labels.pt
-      md5: 7c4b8fc9f81f72f5b94040873fd15e61
+      md5: 30e4de8b45216ce5bd6b2c3bceaac8f1
       size: 400747
     - path: data/MNIST/val_images.pt
       md5: b02b02debafd9c83e272a93ef649c74f
@@ -122,7 +122,7 @@ stages:
           terminate_on_nan:
     outs:
     - path: checkpoints/checkpoint.ckpt
-      md5: f5700f2bb454d103c189fc59abfe415f
+      md5: 4f83c4652781db48e749ab891c87f721
       size: 18556703
   evaluate_on_test_set:
     cmd:
@@ -131,7 +131,7 @@ stages:
       > test_metrics.json
     deps:
     - path: checkpoints/checkpoint.ckpt
-      md5: f5700f2bb454d103c189fc59abfe415f
+      md5: 4f83c4652781db48e749ab891c87f721
       size: 18556703
     - path: data/MNIST/test_images.pt
       md5: f69dee0828bab7df47817ac1f91afc61
@@ -244,5 +244,5 @@ stages:
           terminate_on_nan:
     outs:
     - path: test_metrics.json
-      md5: f1f2aa02303330118a48399e2cd53a52
+      md5: 80c6840e8df1fd6d5a234a5a74981955
       size: 444
