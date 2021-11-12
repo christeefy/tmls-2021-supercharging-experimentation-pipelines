@@ -1,42 +1,41 @@
-schema: "2.0"
+schema: '2.0'
 stages:
   train:
-    cmd:
-      python -m lightning_entrypoint fit --config config.yaml --trainer.profiler
+    cmd: python -m lightning_entrypoint fit --config config.yaml --trainer.profiler
       simple
     deps:
-      - path: data/MNIST/train_images.pt
-        md5: b14319da2570ef0b2e28351418e6830d
-        size: 156800747
-      - path: data/MNIST/train_labels.pt
-        md5: 7c4b8fc9f81f72f5b94040873fd15e61
-        size: 400747
-      - path: data/MNIST/val_images.pt
-        md5: b02b02debafd9c83e272a93ef649c74f
-        size: 31360747
-      - path: data/MNIST/val_labels.pt
-        md5: 79cc8a86d4cf2e41b9f75645f5b82e84
-        size: 80747
-      - path: lightning_entrypoint.py
-        md5: 4cf34a145684164f9ae62cebbe3330cc
-        size: 232
-      - path: src
-        md5: 1bed4275667074db7c742d6bf5108e85.dir
-        size: 13179
-        nfiles: 9
+    - path: data/MNIST/train_images.pt
+      md5: b14319da2570ef0b2e28351418e6830d
+      size: 156800747
+    - path: data/MNIST/train_labels.pt
+      md5: 30e4de8b45216ce5bd6b2c3bceaac8f1
+      size: 400747
+    - path: data/MNIST/val_images.pt
+      md5: b02b02debafd9c83e272a93ef649c74f
+      size: 31360747
+    - path: data/MNIST/val_labels.pt
+      md5: 79cc8a86d4cf2e41b9f75645f5b82e84
+      size: 80747
+    - path: lightning_entrypoint.py
+      md5: 4cf34a145684164f9ae62cebbe3330cc
+      size: 232
+    - path: src
+      md5: 1bed4275667074db7c742d6bf5108e85.dir
+      size: 13179
+      nfiles: 9
     params:
       config.yaml:
         data:
           batch_size: 32
           train_data:
-            - data/MNIST/train_images.pt
-            - data/MNIST/train_labels.pt
+          - data/MNIST/train_images.pt
+          - data/MNIST/train_labels.pt
           val_data:
-            - data/MNIST/val_images.pt
-            - data/MNIST/val_labels.pt
+          - data/MNIST/val_images.pt
+          - data/MNIST/val_labels.pt
           test_data:
-            - data/MNIST/test_images.pt
-            - data/MNIST/test_labels.pt
+          - data/MNIST/test_images.pt
+          - data/MNIST/test_labels.pt
         model:
           transforms:
             class_path: src.transforms.MNISTTransform
@@ -56,13 +55,13 @@ stages:
           checkpoint_callback:
           enable_checkpointing: true
           callbacks:
-            - class_path: pytorch_lightning.callbacks.ModelCheckpoint
-              init_args:
-                dirpath: checkpoints
-                filename: checkpoint
-                save_top_k: 1
-                monitor: val_loss
-                mode: min
+          - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+            init_args:
+              dirpath: checkpoints
+              filename: checkpoint
+              save_top_k: 1
+              monitor: val_loss
+              mode: min
           default_root_dir:
           gradient_clip_val:
           gradient_clip_algorithm:
@@ -121,44 +120,43 @@ stages:
           stochastic_weight_avg: false
           terminate_on_nan:
     outs:
-      - path: checkpoints/checkpoint.ckpt
-        md5: b48466de82afa2220dbbfc8821f95c26
-        size: 18556703
+    - path: checkpoints/checkpoint.ckpt
+      md5: c64bbd1d5e1ddb7d2f94df9a8f13d20b
+      size: 18556703
   evaluate_on_test_set:
-    cmd:
-      python -m lightning_entrypoint test --config config.yaml --ckpt_path checkpoints/checkpoint.ckpt
+    cmd: python -m lightning_entrypoint test --config config.yaml --ckpt_path checkpoints/checkpoint.ckpt
       --trainer.profiler null | sed -n /test_acc_class_0/,/test_loss/p | sed s_\'_\"_g
       > test_metrics.json
     deps:
-      - path: checkpoints/checkpoint.ckpt
-        md5: b48466de82afa2220dbbfc8821f95c26
-        size: 18556703
-      - path: data/MNIST/test_images.pt
-        md5: f69dee0828bab7df47817ac1f91afc61
-        size: 31360747
-      - path: data/MNIST/test_labels.pt
-        md5: 9a9e2071caa05a50a45daaa2ed64767a
-        size: 80747
-      - path: lightning_entrypoint.py
-        md5: 4cf34a145684164f9ae62cebbe3330cc
-        size: 232
-      - path: src
-        md5: 1bed4275667074db7c742d6bf5108e85.dir
-        size: 13179
-        nfiles: 9
+    - path: checkpoints/checkpoint.ckpt
+      md5: c64bbd1d5e1ddb7d2f94df9a8f13d20b
+      size: 18556703
+    - path: data/MNIST/test_images.pt
+      md5: f69dee0828bab7df47817ac1f91afc61
+      size: 31360747
+    - path: data/MNIST/test_labels.pt
+      md5: 9a9e2071caa05a50a45daaa2ed64767a
+      size: 80747
+    - path: lightning_entrypoint.py
+      md5: 4cf34a145684164f9ae62cebbe3330cc
+      size: 232
+    - path: src
+      md5: 1bed4275667074db7c742d6bf5108e85.dir
+      size: 13179
+      nfiles: 9
     params:
       config.yaml:
         data:
           batch_size: 32
           train_data:
-            - data/MNIST/train_images.pt
-            - data/MNIST/train_labels.pt
+          - data/MNIST/train_images.pt
+          - data/MNIST/train_labels.pt
           val_data:
-            - data/MNIST/val_images.pt
-            - data/MNIST/val_labels.pt
+          - data/MNIST/val_images.pt
+          - data/MNIST/val_labels.pt
           test_data:
-            - data/MNIST/test_images.pt
-            - data/MNIST/test_labels.pt
+          - data/MNIST/test_images.pt
+          - data/MNIST/test_labels.pt
         model:
           transforms:
             class_path: src.transforms.MNISTTransform
@@ -178,13 +176,13 @@ stages:
           checkpoint_callback:
           enable_checkpointing: true
           callbacks:
-            - class_path: pytorch_lightning.callbacks.ModelCheckpoint
-              init_args:
-                dirpath: checkpoints
-                filename: checkpoint
-                save_top_k: 1
-                monitor: val_loss
-                mode: min
+          - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+            init_args:
+              dirpath: checkpoints
+              filename: checkpoint
+              save_top_k: 1
+              monitor: val_loss
+              mode: min
           default_root_dir:
           gradient_clip_val:
           gradient_clip_algorithm:
@@ -243,6 +241,6 @@ stages:
           stochastic_weight_avg: false
           terminate_on_nan:
     outs:
-      - path: test_metrics.json
-        md5: e53cf74a006d41dbab0b5e0cc47f9df8
-        size: 445
+    - path: test_metrics.json
+      md5: 3e44de5c414ac5b0862585647a802476
+      size: 445
