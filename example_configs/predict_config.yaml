@@ -1,0 +1,3 @@
+batch_size: 32
+checkpoint_path: checkpoints/checkpoint.ckpt
+predict_images: data/MNIST/predict_images.pt
