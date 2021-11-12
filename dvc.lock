@@ -1,0 +1,248 @@
+schema: "2.0"
+stages:
+  train:
+    cmd:
+      python -m lightning_entrypoint fit --config config.yaml --trainer.profiler
+      simple
+    deps:
+    - path: data/MNIST/train_images.pt
+      md5: b14319da2570ef0b2e28351418e6830d
+      size: 156800747
+    - path: data/MNIST/train_labels.pt
+      md5: 7c4b8fc9f81f72f5b94040873fd15e61
+      size: 400747
+    - path: data/MNIST/val_images.pt
+      md5: b02b02debafd9c83e272a93ef649c74f
+      size: 31360747
+    - path: data/MNIST/val_labels.pt
+      md5: 79cc8a86d4cf2e41b9f75645f5b82e84
+      size: 80747
+    - path: lightning_entrypoint.py
+      md5: a26a47dc4be7566059a6ac5afc01d2b4
+      size: 205
+    - path: src
+      md5: 1bed4275667074db7c742d6bf5108e85.dir
+      size: 13179
+      nfiles: 9
+    params:
+      config.yaml:
+        data:
+          batch_size: 32
+          train_data:
+            - data/MNIST/train_images.pt
+            - data/MNIST/train_labels.pt
+          val_data:
+            - data/MNIST/val_images.pt
+            - data/MNIST/val_labels.pt
+          test_data:
+            - data/MNIST/test_images.pt
+            - data/MNIST/test_labels.pt
+        model:
+          transforms:
+            class_path: src.transforms.MNISTTransform
+            init_args:
+              input_size: 224
+              train_mode: true
+          eval_transforms:
+            class_path: src.transforms.MNISTTransform
+            init_args:
+              input_size: 224
+              train_mode: false
+          model_name: mobilenet
+          n_classes: 10
+        seed_everything: 42
+        trainer:
+          logger: true
+          checkpoint_callback:
+          enable_checkpointing: true
+          callbacks:
+            - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+              init_args:
+                dirpath: checkpoints
+                filename: checkpoint
+                save_top_k: 1
+                monitor: val_loss
+                mode: min
+          default_root_dir:
+          gradient_clip_val:
+          gradient_clip_algorithm:
+          process_position: 0
+          num_nodes: 1
+          num_processes: 1
+          devices: auto
+          gpus:
+          auto_select_gpus: false
+          tpu_cores:
+          ipus:
+          log_gpu_memory:
+          progress_bar_refresh_rate:
+          enable_progress_bar: true
+          overfit_batches: 0.0
+          track_grad_norm: -1
+          check_val_every_n_epoch: 1
+          fast_dev_run: false
+          accumulate_grad_batches:
+          max_epochs: 1
+          min_epochs:
+          max_steps: -1
+          min_steps:
+          max_time:
+          limit_train_batches: 1.0
+          limit_val_batches: 1.0
+          limit_test_batches: 1.0
+          limit_predict_batches: 1.0
+          val_check_interval: 1.0
+          flush_logs_every_n_steps:
+          log_every_n_steps: 50
+          accelerator: auto
+          strategy:
+          sync_batchnorm: false
+          precision: 16
+          enable_model_summary: true
+          weights_summary: top
+          weights_save_path:
+          num_sanity_val_steps: 2
+          resume_from_checkpoint:
+          profiler:
+          benchmark: false
+          deterministic: false
+          reload_dataloaders_every_n_epochs: 0
+          reload_dataloaders_every_epoch: false
+          auto_lr_find: false
+          replace_sampler_ddp: true
+          detect_anomaly: false
+          auto_scale_batch_size: false
+          prepare_data_per_node:
+          plugins:
+          amp_backend: native
+          amp_level:
+          move_metrics_to_cpu: false
+          multiple_trainloader_mode: max_size_cycle
+          stochastic_weight_avg: false
+          terminate_on_nan:
+    outs:
+    - path: checkpoints/checkpoint.ckpt
+      md5: f5700f2bb454d103c189fc59abfe415f
+      size: 18556703
+  evaluate_on_test_set:
+    cmd:
+      python -m lightning_entrypoint test --config config.yaml --ckpt_path checkpoints/checkpoint.ckpt
+      --trainer.profiler null | sed -n /test_acc_class_0/,/test_loss/p | sed s_\'_\"_g
+      > test_metrics.json
+    deps:
+    - path: checkpoints/checkpoint.ckpt
+      md5: f5700f2bb454d103c189fc59abfe415f
+      size: 18556703
+    - path: data/MNIST/test_images.pt
+      md5: f69dee0828bab7df47817ac1f91afc61
+      size: 31360747
+    - path: data/MNIST/test_labels.pt
+      md5: 9a9e2071caa05a50a45daaa2ed64767a
+      size: 80747
+    - path: lightning_entrypoint.py
+      md5: a26a47dc4be7566059a6ac5afc01d2b4
+      size: 205
+    - path: src
+      md5: 1bed4275667074db7c742d6bf5108e85.dir
+      size: 13179
+      nfiles: 9
+    params:
+      config.yaml:
+        data:
+          batch_size: 32
+          train_data:
+            - data/MNIST/train_images.pt
+            - data/MNIST/train_labels.pt
+          val_data:
+            - data/MNIST/val_images.pt
+            - data/MNIST/val_labels.pt
+          test_data:
+            - data/MNIST/test_images.pt
+            - data/MNIST/test_labels.pt
+        model:
+          transforms:
+            class_path: src.transforms.MNISTTransform
+            init_args:
+              input_size: 224
+              train_mode: true
+          eval_transforms:
+            class_path: src.transforms.MNISTTransform
+            init_args:
+              input_size: 224
+              train_mode: false
+          model_name: mobilenet
+          n_classes: 10
+        seed_everything: 42
+        trainer:
+          logger: true
+          checkpoint_callback:
+          enable_checkpointing: true
+          callbacks:
+            - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+              init_args:
+                dirpath: checkpoints
+                filename: checkpoint
+                save_top_k: 1
+                monitor: val_loss
+                mode: min
+          default_root_dir:
+          gradient_clip_val:
+          gradient_clip_algorithm:
+          process_position: 0
+          num_nodes: 1
+          num_processes: 1
+          devices: auto
+          gpus:
+          auto_select_gpus: false
+          tpu_cores:
+          ipus:
+          log_gpu_memory:
+          progress_bar_refresh_rate:
+          enable_progress_bar: true
+          overfit_batches: 0.0
+          track_grad_norm: -1
+          check_val_every_n_epoch: 1
+          fast_dev_run: false
+          accumulate_grad_batches:
+          max_epochs: 1
+          min_epochs:
+          max_steps: -1
+          min_steps:
+          max_time:
+          limit_train_batches: 1.0
+          limit_val_batches: 1.0
+          limit_test_batches: 1.0
+          limit_predict_batches: 1.0
+          val_check_interval: 1.0
+          flush_logs_every_n_steps:
+          log_every_n_steps: 50
+          accelerator: auto
+          strategy:
+          sync_batchnorm: false
+          precision: 16
+          enable_model_summary: true
+          weights_summary: top
+          weights_save_path:
+          num_sanity_val_steps: 2
+          resume_from_checkpoint:
+          profiler:
+          benchmark: false
+          deterministic: false
+          reload_dataloaders_every_n_epochs: 0
+          reload_dataloaders_every_epoch: false
+          auto_lr_find: false
+          replace_sampler_ddp: true
+          detect_anomaly: false
+          auto_scale_batch_size: false
+          prepare_data_per_node:
+          plugins:
+          amp_backend: native
+          amp_level:
+          move_metrics_to_cpu: false
+          multiple_trainloader_mode: max_size_cycle
+          stochastic_weight_avg: false
+          terminate_on_nan:
+    outs:
+    - path: test_metrics.json
+      md5: f1f2aa02303330118a48399e2cd53a52
+      size: 444

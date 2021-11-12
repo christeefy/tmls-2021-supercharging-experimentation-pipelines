@@ -1,0 +1,37 @@
+stages:
+  train:
+    cmd: python -m lightning_entrypoint fit --config config.yaml --trainer.profiler
+      simple
+    deps:
+    - data/MNIST/train_images.pt
+    - data/MNIST/train_labels.pt
+    - data/MNIST/val_images.pt
+    - data/MNIST/val_labels.pt
+    - lightning_entrypoint.py
+    - src
+    params:
+    - config.yaml:
+      - data
+      - model
+      - seed_everything
+      - trainer
+    outs:
+    - checkpoints/checkpoint.ckpt
+  evaluate_on_test_set:
+    cmd: python -m lightning_entrypoint test --config config.yaml --ckpt_path checkpoints/checkpoint.ckpt
+      --trainer.profiler null | sed -n /test_acc_class_0/,/test_loss/p | sed s_\'_\"_g
+      > test_metrics.json
+    deps:
+    - checkpoints/checkpoint.ckpt
+    - data/MNIST/test_images.pt
+    - data/MNIST/test_labels.pt
+    - lightning_entrypoint.py
+    - src
+    params:
+    - config.yaml:
+      - data
+      - model
+      - seed_everything
+      - trainer
+    metrics:
+    - test_metrics.json
